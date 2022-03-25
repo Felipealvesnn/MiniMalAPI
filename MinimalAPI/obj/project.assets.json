@@ -2622,11 +2622,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Rudrex\\OneDrive\\Área de Trabalho\\aspnet\\MinimalAPI\\MinimalAPI\\MinimalAPI.csproj",
+      "projectUniqueName": "C:\\Users\\Rudrex\\OneDrive\\Documentos\\GitHub\\MiniMalAPI\\MinimalAPI\\MinimalAPI.csproj",
       "projectName": "MinimalAPI",
-      "projectPath": "C:\\Users\\Rudrex\\OneDrive\\Área de Trabalho\\aspnet\\MinimalAPI\\MinimalAPI\\MinimalAPI.csproj",
+      "projectPath": "C:\\Users\\Rudrex\\OneDrive\\Documentos\\GitHub\\MiniMalAPI\\MinimalAPI\\MinimalAPI.csproj",
       "packagesPath": "C:\\Users\\Rudrex\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Rudrex\\OneDrive\\Área de Trabalho\\aspnet\\MinimalAPI\\MinimalAPI\\obj\\",
+      "outputPath": "C:\\Users\\Rudrex\\OneDrive\\Documentos\\GitHub\\MiniMalAPI\\MinimalAPI\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

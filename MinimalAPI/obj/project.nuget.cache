@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "t6JNcddCcK5S2Ex+Aq54ggk7BwrP2N+4ceNLVqrbhafJIkZ1t1Lt5EglBv779BvDqr/eqEQbTTL4D63wOBSfaQ==",
+  "dgSpecHash": "aFRL3Vi3h22gcmTJ0Gx3k7c6Z6Q+e0Bdw77SUHWbgPKmreOi1fsm3KjqwqMUqxN+FMaWIQPX8RYq5Losen3mFA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Rudrex\\OneDrive\\Área de Trabalho\\aspnet\\MinimalAPI\\MinimalAPI\\MinimalAPI.csproj",
+  "projectFilePath": "C:\\Users\\Rudrex\\OneDrive\\Documentos\\GitHub\\MiniMalAPI\\MinimalAPI\\MinimalAPI.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Rudrex\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",
     "C:\\Users\\Rudrex\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\6.0.1\\microsoft.aspnetcore.authentication.jwtbearer.6.0.1.nupkg.sha512",
