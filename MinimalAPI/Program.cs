@@ -1,6 +1,8 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Microsoft.OpenApi.Models;
 using MinimalAPI.Data;
 using MinimalAPI.Models;
 using MiniValidation;
@@ -10,10 +12,8 @@ using NetDevPack.Identity.Model;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+#region Configure Services
+
 
 //para configurar o banco de dados
 builder.Services.AddDbContext<MinimalContextDB>(options =>
@@ -23,11 +23,59 @@ builder.Services.AddIdentityEntityFrameworkContextConfiguration(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("StringDeConecao"),
     b => b.MigrationsAssembly("MinimalAPI")));
 
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("ExcluirFornecedor",
+        policy => policy.RequireClaim("ExcluirFornecedor"));
+});
+
 builder.Services.AddIdentityConfiguration();
 builder.Services.AddJwtConfiguration(builder.Configuration, "AppSettings");
 
+// Add services to the container.
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "Minimal API Sample",
+        Description = "nothing",
+        Contact = new OpenApiContact { Name = "Felipe alves", Email = "felipe.alvesnn@gmail.com" },
+        License = new OpenApiLicense { Name = "MIT", Url = new Uri("https://opensource.org/licenses/MIT") }
+    });
+
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Description = "Insira o token JWT desta maneira: Bearer {seu token}",
+        Name = "Authorization",
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.ApiKey
+    });
+
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            new string[] {}
+        }
+    });
+});
+
 var app = builder.Build();
 
+#endregion
+
+#region Configure Pipeline
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -38,7 +86,7 @@ if (app.Environment.IsDevelopment())
 app.UseAuthConfiguration();
 app.UseHttpsRedirection();
 
-app.MapPost("/registro", async (
+app.MapPost("/registro", [AllowAnonymous] async (
     SignInManager<IdentityUser>signInManager,
     UserManager < IdentityUser > UserManager,
     IOptions<AppJwtSettings > appJwtSettings,
@@ -73,7 +121,7 @@ app.MapPost("/registro", async (
       .WithName("RegistroUsuario")
       .WithTags("Usuario");
 
-app.MapPost("/login",  async (
+app.MapPost("/login", [AllowAnonymous] async (
         SignInManager<IdentityUser> signInManager,
         UserManager<IdentityUser> userManager,
         IOptions<AppJwtSettings> appJwtSettings,
@@ -110,12 +158,12 @@ app.MapPost("/login",  async (
       .WithName("LoginUsuario")
       .WithTags("Usuario");
 
-app.MapGet("/fornecedor", async (MinimalContextDB context)
+app.MapGet("/fornecedor", [AllowAnonymous] async (MinimalContextDB context)
      => await context.Fornecedores.ToListAsync())
     .WithName("GetFornecedor")
     .WithTags("Fornecedor");
 
-app.MapGet("/fornecedor{id}", async (Guid id,
+app.MapGet("/fornecedor{id}", [AllowAnonymous] async (Guid id,
     MinimalContextDB context) =>
       await context.Fornecedores.FindAsync(id)
       is Fornecedor fornecedor
@@ -126,7 +174,7 @@ app.MapGet("/fornecedor{id}", async (Guid id,
     .WithName("GetFornecedorPorId")
     .WithTags("Fornecedor");
 
-app.MapPost("/fornecedor", async (
+app.MapPost("/fornecedor",[Authorize] async (
    MinimalContextDB context, Fornecedor fornecedor
    ) =>
 {
@@ -148,7 +196,7 @@ app.MapPost("/fornecedor", async (
     .WithName("PostFornecedor")
     .WithTags("Fornecedor");
 
-app.MapPut("/fornecedor/{id}", async (
+app.MapPut("/fornecedor/{id}", [Authorize] async (
        Guid id,
        MinimalContextDB context,
        Fornecedor fornecedor) =>
@@ -173,7 +221,7 @@ app.MapPut("/fornecedor/{id}", async (
    .WithName("PutFornecedor")
    .WithTags("Fornecedor");
 
-app.MapDelete("/fornecedor/{id}",  async (
+app.MapDelete("/fornecedor/{id}", [Authorize] async (
         Guid id,
         MinimalContextDB context) =>
 {
@@ -195,6 +243,6 @@ app.MapDelete("/fornecedor/{id}",  async (
     .WithTags("Fornecedor");
 
 
-
-
 app.Run();
+
+#endregion
